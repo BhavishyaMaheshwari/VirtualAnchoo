@@ -1,0 +1,9 @@
+{
+  "name": "netscope-local",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix frontend run dev -- --host 0.0.0.0",
+    "build": "npm --prefix frontend run build",
+    "test": "bash scripts/test.sh"
+  }
+}
