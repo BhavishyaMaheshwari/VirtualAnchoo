@@ -124,8 +124,8 @@ def nft_ruleset(vlans: list, rules: list, *, existing: bool = False) -> str:
     rules = validate_rules(rules, vlans)
     networks = {v["id"]: v["subnet"] for v in vlans}
     enabled = [r for r in rules if r["enabled"]]
-    lines = (["delete table inet netscope"] if existing else []) + [
-        "table inet netscope {",
+    lines = (["delete table inet virtualanchoo"] if existing else []) + [
+        "table inet virtualanchoo {",
         "  chain forward {",
         f"    type filter hook forward priority 0; policy {'drop' if enabled else 'accept'};",
         "    ct state invalid drop",

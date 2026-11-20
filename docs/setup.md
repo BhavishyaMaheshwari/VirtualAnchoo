@@ -86,9 +86,9 @@ Do not substitute generated test packets for measured traffic in reports. Unit t
 ./scripts/start.sh --live
 ```
 
-On macOS, start with `./scripts/start.sh --production --live` in a normal Terminal. Scapy uses macOS BPF devices; the account running NetScope must be able to open `/dev/bpf*`. Check with `id -Gn` and `ls -l /dev/bpf0`. A coding sandbox may deny BPF and local port binding even when the same account can use them from Terminal. Do not run the entire web application with `sudo` just to access BPF. If capture permission is unavailable, use `tcpdump` as an authorized operator to create a PCAP and import it through the dashboard.
+On macOS, start with `./scripts/start.sh --production --live` in a normal Terminal. Scapy uses macOS BPF devices; the account running VirtualAnchoo must be able to open `/dev/bpf*`. Check with `id -Gn` and `ls -l /dev/bpf0`. A coding sandbox may deny BPF and local port binding even when the same account can use them from Terminal. Do not run the entire web application with `sudo` just to access BPF. If capture permission is unavailable, use `tcpdump` as an authorized operator to create a PCAP and import it through the dashboard.
 
-Live capture additionally requires `NETSCOPE_LIVE_CAPTURE=1`, a valid accessible interface, OS capture privileges, and `authorized: true` in the capture request. The dashboard asks the operator to acknowledge authorization before starting. This is an operator assertion, not automatic permission discovery.
+Live capture additionally requires `VIRTUALANCHOO_LIVE_CAPTURE=1`, a valid accessible interface, OS capture privileges, and `authorized: true` in the capture request. The dashboard asks the operator to acknowledge authorization before starting. This is an operator assertion, not automatic permission discovery.
 
 Check interfaces with `GET /api/interfaces`. Use a narrow filter and a reasonable packet limit, for example `icmp` for an owned lab interface. Invalid BPF filters, unknown interfaces, and unavailable permissions are reported as errors. A capture that starts but encounters an asynchronous error reports it in capture status.
 
@@ -97,17 +97,17 @@ On Linux, Scapy's raw socket capture generally requires `CAP_NET_RAW`; some capt
 An administrator can run the backend with scoped capabilities using systemd on a dedicated Linux lab machine. Stop an already-running backend first. This example grants the process capture capabilities while retaining the current user's identity:
 
 ```bash
-sudo systemd-run --unit=netscope-capture --collect \
+sudo systemd-run --unit=virtualanchoo-capture --collect \
   --uid="$(id -u)" --gid="$(id -g)" \
   --working-directory="$PWD" \
   --property=AmbientCapabilities='CAP_NET_RAW CAP_NET_ADMIN' \
   --property=CapabilityBoundingSet='CAP_NET_RAW CAP_NET_ADMIN' \
-  --setenv=NETSCOPE_LIVE_CAPTURE=1 \
+  --setenv=VIRTUALANCHOO_LIVE_CAPTURE=1 \
   "$PWD/.venv/bin/python" -m uvicorn backend.app.main:app \
   --host 127.0.0.1 --port 8765
 ```
 
-Inspect with `journalctl -u netscope-capture`; stop with `sudo systemctl stop netscope-capture`. This is a Linux operator setup example, not a command executed by the application. It is unavailable in containers without systemd or a sufficient capability bounding set.
+Inspect with `journalctl -u virtualanchoo-capture`; stop with `sudo systemctl stop virtualanchoo-capture`. This is a Linux operator setup example, not a command executed by the application. It is unavailable in containers without systemd or a sufficient capability bounding set.
 
 ## 6. Ubuntu VLAN lab prerequisites
 
@@ -142,13 +142,13 @@ Keep that terminal open. In a second terminal as the ordinary application user:
 
 The API then reports active observed state. Saved custom VLANs/ACLs can be applied with the Access Control page's **Apply saved rules** button. Routing remains disabled until enabled explicitly. The fixed six hosts cannot be reassigned through the dashboard; extra VLANs initially have no hosts. In-place subnet changes and deleting live VLANs are unsupported.
 
-To stop the owned lab, run `.venv/bin/python -m network.cleanup` or Ctrl+C in the agent terminal. Agent operations never accept arbitrary shell commands. `NETSCOPE_LAB_SOCKET` changes the client path; an explicit agent `--socket` must match and its parent must be root-owned and not writable by other users.
+To stop the owned lab, run `.venv/bin/python -m network.cleanup` or Ctrl+C in the agent terminal. Agent operations never accept arbitrary shell commands. `VIRTUALANCHOO_LAB_SOCKET` changes the client path; an explicit agent `--socket` must match and its parent must be root-owned and not writable by other users.
 
 For privileged pytest, use a separate `python3 -m venv --system-site-packages .venv-lab`, install the backend requirements there, and run its interpreter under the documented opt-in. This makes Ubuntu's Mininet module visible without requiring it in the ordinary application venv.
 
 ## 8. Storage and retention
 
-`NETSCOPE_DATA_DIR` selects the backend data directory; the default is the repository's `data/` directory. Keep it private. The packet database is `netscope.sqlite3`, and captured packet files are under `captures/`.
+`VIRTUALANCHOO_DATA_DIR` selects the backend data directory; the default is the repository's `data/` directory. Keep it private. The packet database is `virtualanchoo.sqlite3`, and captured packet files are under `captures/`. Existing installations with a `netscope.sqlite3` database continue to use it until the file is migrated manually.
 
 The backend limits a session to 100,000 packets, an uploaded file to 64 MiB, and a live capture file to 128 MiB, with a 1 GiB storage guard. These are application limits, not a substitute for filesystem quotas or backups. Stop capture before deleting a session. `DELETE /api/sessions/{session_id}` is the explicit history-removal operation. No automatic retention deletion is performed.
 
@@ -158,7 +158,7 @@ The backend limits a session to 100,000 packets, an uploaded file to 64 MiB, and
 | --- | --- |
 | Dashboard reports backend offline | Start the backend; check port 8765 and process logs. Confirm the frontend proxy uses the same port. |
 | No packets or charts | Import a valid authorized capture or start capture on the relevant interface. Empty counters are expected without data. |
-| Live mode disabled | Restart with `--live` or `NETSCOPE_LIVE_CAPTURE=1`; this still requires OS privileges. |
+| Live mode disabled | Restart with `--live` or `VIRTUALANCHOO_LIVE_CAPTURE=1`; this still requires OS privileges. |
 | Operation not permitted | Check raw-socket capabilities, container capability bounding set, and interface access. Use offline import when privileges are unavailable. |
 | BPF filter error | Check filter syntax and libpcap availability. Start with a simple filter such as `icmp`. |
 | Traffic appears twice on loopback | Some capture paths expose duplicate observations. Counters describe captured observations; retransmission estimates can include duplicates. |
@@ -168,10 +168,10 @@ The backend limits a session to 100,000 packets, an uploaded file to 64 MiB, and
 | Cross-VLAN ping fails | Check lab state, subnet/gateway addresses, router forwarding, and firewall policy; a failure does not uniquely prove an ACL block. |
 | PCAP upload fails | Confirm format, non-corruption, supported link type, packet limit, and upload/storage limits. |
 | WebSocket reconnects | REST history remains available; verify origin/port and proxy configuration. |
-| TLS payload unreadable | Expected: NetScope does not decrypt TLS. Endpoint and timing metadata may still be visible. |
+| TLS payload unreadable | Expected: VirtualAnchoo does not decrypt TLS. Endpoint and timing metadata may still be visible. |
 
 Do not use a broad Mininet cleanup command on a machine hosting unrelated labs. Use the project's scoped cleanup procedure after stopping its lab process.
 
 ## Port overrides
 
-`./scripts/start.sh --backend-port 8766 --frontend-port 5174` configures the proxy and exact local browser origins for those ports. For manual starts, set `NETSCOPE_API_TARGET=http://127.0.0.1:8766` for Vite and `NETSCOPE_ALLOWED_ORIGINS=http://127.0.0.1:5174,http://localhost:5174` for FastAPI. Keep bindings on loopback. `NETSCOPE_NETWORK_DB` selects the lab configuration database independently from the packet data directory. Run CLI and API with the same value when overriding it.
+`./scripts/start.sh --backend-port 8766 --frontend-port 5174` configures the proxy and exact local browser origins for those ports. For manual starts, set `VIRTUALANCHOO_API_TARGET=http://127.0.0.1:8766` for Vite and `VIRTUALANCHOO_ALLOWED_ORIGINS=http://127.0.0.1:5174,http://localhost:5174` for FastAPI. Keep bindings on loopback. `VIRTUALANCHOO_NETWORK_DB` selects the lab configuration database independently from the packet data directory. Run CLI and API with the same value when overriding it.

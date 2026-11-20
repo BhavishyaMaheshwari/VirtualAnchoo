@@ -62,11 +62,12 @@ export function Empty({
   );
 }
 const tooltipStyle = {
-  background: "#171f2b",
-  border: "1px solid #334051",
+  background: "#ffffff",
+  border: "1px solid #dce7d5",
   borderRadius: 8,
   fontSize: 12,
-  color: "#e1e7ee",
+  color: "#2d4031",
+  boxShadow: "0 8px 24px #243b1f1a",
 };
 export function TrafficChart({
   data,
@@ -102,14 +103,14 @@ export function TrafficChart({
           <linearGradient id={`gradient-${metric}`} x1="0" y1="0" x2="0" y2="1">
             <stop
               offset="0%"
-              stopColor={metric === "bytes" ? "#9de4ad" : "#9baaff"}
-              stopOpacity={0.3}
+              stopColor={metric === "bytes" ? "#a7d653" : "#7f9fd2"}
+              stopOpacity={0.22}
             />
-            <stop offset="100%" stopColor="#9de4ad" stopOpacity={0} />
+            <stop offset="100%" stopColor="#a7d653" stopOpacity={0} />
           </linearGradient>
         </defs>
         <CartesianGrid
-          stroke="#27313e"
+          stroke="#e8eee2"
           vertical={false}
           strokeDasharray="3 6"
         />
@@ -117,7 +118,7 @@ export function TrafficChart({
           dataKey="timestamp"
           tickFormatter={(v) => time(v)}
           minTickGap={50}
-          tick={{ fill: "#8290a2", fontSize: 11 }}
+          tick={{ fill: "#67796a", fontSize: 11 }}
           axisLine={false}
           tickLine={false}
         />
@@ -125,7 +126,7 @@ export function TrafficChart({
           tickFormatter={(v) =>
             metric === "bytes" ? `${bytes(v)}/s` : `${number(v)}/s`
           }
-          tick={{ fill: "#8290a2", fontSize: 11 }}
+          tick={{ fill: "#67796a", fontSize: 11 }}
           axisLine={false}
           tickLine={false}
           width={65}
@@ -143,8 +144,8 @@ export function TrafficChart({
         <Area
           type="monotone"
           dataKey={metric}
-          stroke={metric === "bytes" ? "#a5efb5" : "#9baaff"}
-          strokeWidth={2}
+          stroke={metric === "bytes" ? "#82b63d" : "#6f8ebf"}
+          strokeWidth={2.5}
           fill={`url(#gradient-${metric})`}
           isAnimationActive={false}
         />
@@ -290,18 +291,18 @@ export function SizeChart({ data }: { data: AppData }) {
         margin={{ top: 18, right: 15, left: 0, bottom: 8 }}
       >
         <CartesianGrid
-          stroke="#27313e"
+          stroke="#e8eee2"
           vertical={false}
           strokeDasharray="3 6"
         />
         <XAxis
           dataKey="range"
-          tick={{ fill: "#8290a2", fontSize: 10 }}
+          tick={{ fill: "#67796a", fontSize: 11 }}
           axisLine={false}
           tickLine={false}
         />
         <YAxis
-          tick={{ fill: "#8290a2", fontSize: 11 }}
+          tick={{ fill: "#67796a", fontSize: 11 }}
           axisLine={false}
           tickLine={false}
           width={42}
@@ -310,7 +311,7 @@ export function SizeChart({ data }: { data: AppData }) {
         <Bar
           dataKey="count"
           name="Packets"
-          fill="#9cacf0"
+          fill="#a5d353"
           radius={[4, 4, 0, 0]}
           maxBarSize={34}
           isAnimationActive={false}

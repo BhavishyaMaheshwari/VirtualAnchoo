@@ -1,6 +1,6 @@
 # Architecture
 
-NetScope has two independent data paths: packet analysis and an optional Linux VLAN lab. The browser never captures packets itself, and drawing a topology does not create a network.
+VirtualAnchoo has two independent data paths: packet analysis and an optional Linux VLAN lab. The browser never captures packets itself, and drawing a topology does not create a network.
 
 ```mermaid
 flowchart LR

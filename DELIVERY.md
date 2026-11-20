@@ -1,10 +1,10 @@
-# NetScope delivery
+# VirtualAnchoo delivery
 
 This archive contains the full Python and TypeScript source, a prebuilt React dashboard, Mininet/OVS lab scripts, tests, setup/run scripts and documentation. It excludes installed dependencies, private runtime data and captures. The application begins with empty history.
 
 ## First run
 
-Extract the ZIP, open a terminal in its `netscope` folder, then:
+Extract the ZIP, open a terminal in its `VirtualAnchoo` folder, then:
 
 ```bash
 bash scripts/setup.sh
@@ -17,7 +17,7 @@ For development use `bash scripts/start.sh` and visit http://127.0.0.1:5173. Use
 
 ## What was checked
 
-- 64 Python tests and 8 frontend interaction tests pass.
+- 65 Python tests and 8 frontend interaction tests pass.
 - Six privileged integration tests are explicitly skipped in the build environment.
 - TypeScript and the Vite production build pass.
 - Historical public Wireshark DHCP/DNS captures pass real API import, analytics and byte-identical export checks.

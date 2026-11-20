@@ -23,13 +23,13 @@ export function time(value: number | string | undefined, full = false) {
       });
 }
 export const colors = [
-  "#a5efb5",
-  "#8ba8ff",
-  "#c5a4ff",
-  "#f5c678",
-  "#79c9de",
-  "#eb9bb3",
-  "#8b9caa",
+  "#527d2e",
+  "#536fa9",
+  "#7963a3",
+  "#a66c23",
+  "#397e89",
+  "#a75670",
+  "#65766c",
 ];
 export function protocolColor(p: string) {
   const ps = [

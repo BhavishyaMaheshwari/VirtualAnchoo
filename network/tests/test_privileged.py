@@ -1,7 +1,7 @@
 """Actual isolated Linux lab tests. Every reachability assertion uses real ping.
 
-Run only on a dedicated Ubuntu VM, with no other NetScope lab running:
-  sudo env NETSCOPE_RUN_NETWORK_TESTS=1 .venv/bin/python -m pytest network/tests/test_privileged.py -v
+Run only on a dedicated Ubuntu VM, with no other VirtualAnchoo lab running:
+  sudo env VIRTUALANCHOO_RUN_NETWORK_TESTS=1 .venv/bin/python -m pytest network/tests/test_privileged.py -v
 Mininet's system package must be visible to the interpreter (see setup.md).
 """
 import importlib.util
@@ -15,8 +15,8 @@ from network.schema import validate_rule, HOSTS, TRUNK
 
 @pytest.fixture(scope='module')
 def lab():
-    if os.getenv('NETSCOPE_RUN_NETWORK_TESTS')!='1':
-        pytest.skip('Set NETSCOPE_RUN_NETWORK_TESTS=1 on an authorized isolated Linux VM')
+    if os.getenv('VIRTUALANCHOO_RUN_NETWORK_TESTS')!='1':
+        pytest.skip('Set VIRTUALANCHOO_RUN_NETWORK_TESTS=1 on an authorized isolated Linux VM')
     if sys.platform!='linux' or os.geteuid()!=0:
         pytest.skip('Requires Linux root and network administration capabilities')
     missing=[name for name in ['mnexec','ovs-vsctl','nft','ip','ping'] if not shutil.which(name)]

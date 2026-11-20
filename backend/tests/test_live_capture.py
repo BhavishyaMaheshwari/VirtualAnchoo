@@ -13,8 +13,8 @@ from backend.app.main import create_app
 
 @pytest.mark.integration
 def test_real_loopback_capture_lifecycle_and_websocket(tmp_path,monkeypatch):
-    if os.environ.get("NETSCOPE_RUN_LIVE_TESTS") != "1":
-        pytest.skip("Set NETSCOPE_RUN_LIVE_TESTS=1 to authorize the real loopback capture integration")
+    if os.environ.get("VIRTUALANCHOO_RUN_LIVE_TESTS") != "1":
+        pytest.skip("Set VIRTUALANCHOO_RUN_LIVE_TESTS=1 to authorize the real loopback capture integration")
     if sys.platform != "linux" or not hasattr(socket,"AF_PACKET"):
         pytest.skip("Linux AF_PACKET capture is required")
     try:
@@ -22,7 +22,7 @@ def test_real_loopback_capture_lifecycle_and_websocket(tmp_path,monkeypatch):
         probe.close()
     except PermissionError:
         pytest.skip("CAP_NET_RAW is unavailable in this environment")
-    monkeypatch.setenv("NETSCOPE_LIVE_CAPTURE","1")
+    monkeypatch.setenv("VIRTUALANCHOO_LIVE_CAPTURE","1")
     with TestClient(create_app(tmp_path/"live")) as client:
         with client.websocket_connect("/ws") as ws:
             assert ws.receive_json()["type"] == "capture_status"
@@ -34,8 +34,8 @@ def test_real_loopback_capture_lifecycle_and_websocket(tmp_path,monkeypatch):
                 receiver.bind(("127.0.0.1",0))
                 receiver.settimeout(2)
                 destination = receiver.getsockname()
-                sender.sendto(b"NetScope authorized loopback integration",destination)
-                assert receiver.recvfrom(256)[0].startswith(b"NetScope")
+                sender.sendto(b"VirtualAnchoo authorized loopback integration",destination)
+                assert receiver.recvfrom(256)[0].startswith(b"VirtualAnchoo")
             event = ws.receive_json()
             assert event["type"] == "packet"
             assert event["data"]["session_id"] == sid

@@ -17,7 +17,11 @@ class Database:
         self.pcap_dir = self.data_dir / "captures"
         self.pcap_dir.mkdir(exist_ok=True)
         self.lock = threading.RLock()
-        self.conn = sqlite3.connect(str(self.data_dir / "netscope.sqlite3"), check_same_thread=False)
+        db_path = self.data_dir / "virtualanchoo.sqlite3"
+        legacy_path = self.data_dir / "netscope.sqlite3"
+        if legacy_path.exists() and not db_path.exists():
+            db_path = legacy_path
+        self.conn = sqlite3.connect(str(db_path), check_same_thread=False)
         self.conn.row_factory = sqlite3.Row
         self.conn.execute("PRAGMA journal_mode=WAL")
         self.conn.executescript('''

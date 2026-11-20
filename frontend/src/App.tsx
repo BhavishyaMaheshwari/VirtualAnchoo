@@ -23,7 +23,6 @@ import {
   Menu,
   Terminal,
   FileInput,
-  HardDrive,
   LoaderCircle,
   CheckCircle2,
   AlertTriangle,
@@ -245,7 +244,7 @@ export default function App() {
             <Activity size={24} strokeWidth={2.4} />
           </div>
           <span>
-            NetScope<span className="brand-dot">.</span>
+            VirtualAnchoo<span className="brand-dot">.</span>
           </span>
         </a>
         <div className="workspace-card">
@@ -285,21 +284,6 @@ export default function App() {
           ))}
         </nav>
         <div className="sidebar-bottom">
-          <div className="local-note">
-            <span className="local-note-icon">
-              <HardDrive size={17} />
-            </span>
-            <strong>Local by design</strong>
-            <p>
-              Your packet data stays on
-              <br />
-              this machine.
-            </p>
-            <a href="/docs" target="_blank" rel="noreferrer">
-              API reference
-              <ArrowUpRight size={13} />
-            </a>
-          </div>
           <div className="sidebar-status">
             <span className={`status-orb ${data.online ? "green" : ""}`} />
             <span>
@@ -389,7 +373,7 @@ export default function App() {
             <div className="notice warning">
               <AlertTriangle size={17} />
               <span>
-                Backend unavailable. Start NetScope locally to capture traffic
+                Backend unavailable. Start VirtualAnchoo locally to capture traffic
                 or import a PCAP. <code>./scripts/start.sh</code>
               </span>
             </div>
@@ -486,7 +470,7 @@ export default function App() {
                   <div className="getting-started-copy">
                     <span className="eyebrow">GET STARTED</span>
                     <h2>See what is happening on your network.</h2>
-                    <p>Import a PCAP or PCAPNG file for immediate analysis. Live capture is available when you start NetScope with capture permissions.</p>
+                    <p>Import a PCAP or PCAPNG file for immediate analysis. Live capture is available when you start VirtualAnchoo with capture permissions.</p>
                   </div>
                   <div className="getting-started-actions">
                     <button className="button primary" onClick={() => fileRef.current?.click()}><Upload size={15} /> Import a capture</button>
@@ -758,7 +742,7 @@ export default function App() {
           {page === "segmentation" && <SegmentationPage {...networkProps} />}
           <footer className="main-footer">
             <span>
-              NETSCOPE <span className="footer-slash">/</span> Network
+              VIRTUALANCHOO <span className="footer-slash">/</span> Network
               visibility, packet by packet.
             </span>
             <span>

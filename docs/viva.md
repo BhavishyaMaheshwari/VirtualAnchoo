@@ -4,7 +4,7 @@
 
 A sniffer asks the operating system for packets visible at an interface. It does not automatically see every packet on a switched network. A switch normally forwards unicast Ethernet traffic only to the relevant port. A mirror/SPAN port, a network tap, or capture inside an endpoint can provide other viewpoints. Promiscuous mode changes what a NIC accepts; it does not make a switch copy unrelated traffic onto that NIC.
 
-NetScope uses Scapy to capture and dissect packets. Capture and analysis are separate operations: live capture obtains bytes from an interface; offline analysis reads bytes already stored in a PCAP. Imported traffic has its original capture timestamps and must not be labelled as traffic currently crossing the operator's network.
+VirtualAnchoo uses Scapy to capture and dissect packets. Capture and analysis are separate operations: live capture obtains bytes from an interface; offline analysis reads bytes already stored in a PCAP. Imported traffic has its original capture timestamps and must not be labelled as traffic currently crossing the operator's network.
 
 ## Ethernet frames and encapsulation
 
@@ -22,7 +22,7 @@ A subnet prefix identifies the on-link address range. For example, `192.168.10.0
 
 TCP provides a reliable ordered byte stream using sequence numbers, acknowledgements, retransmissions, flow control, and congestion control. A common connection begins with SYN, SYN-ACK, ACK. FIN supports graceful shutdown; RST aborts a connection. The advertised receive window is a flow-control signal, not a direct measurement of network bandwidth.
 
-A retransmission inference based on repeated sequence ranges is heuristic. Duplicate captures, packet reordering, overlapping segments, sequence wraparound, offload, and missing packets can complicate it. NetScope's flow counters are packet observations, not a full reconstruction of application sessions.
+A retransmission inference based on repeated sequence ranges is heuristic. Duplicate captures, packet reordering, overlapping segments, sequence wraparound, offload, and missing packets can complicate it. VirtualAnchoo's flow counters are packet observations, not a full reconstruction of application sessions.
 
 ## UDP
 
@@ -74,4 +74,4 @@ Packet bytes, IP total length, and application payload length are different quan
 
 HTTPS is HTTP over TLS. TLS encrypts application content and authenticates peers according to its configuration. A passive capture may reveal endpoints, ports, lengths, timing, and parts of a handshake; it does not reveal decrypted HTTP bodies without suitable keys and a supported decryption workflow. Port 443 is only a heuristic indicator of TLS/HTTPS, and traffic on another port may also be encrypted.
 
-NetScope is a teaching and diagnostic tool. It does not guarantee security, identify every application, authenticate MAC/IP ownership, or replace a production network monitoring platform.
+VirtualAnchoo is a teaching and diagnostic tool. It does not guarantee security, identify every application, authenticate MAC/IP ownership, or replace a production network monitoring platform.

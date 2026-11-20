@@ -14,7 +14,7 @@ from backend.app.services import capture_engine
 
 @pytest.fixture
 def client(tmp_path,monkeypatch):
-    monkeypatch.delenv("NETSCOPE_LIVE_CAPTURE",raising=False)
+    monkeypatch.delenv("VIRTUALANCHOO_LIVE_CAPTURE",raising=False)
     with TestClient(create_app(tmp_path/"data")) as client:
         yield client
 
@@ -114,7 +114,7 @@ def test_capture_requires_operator_opt_in(client):
 
 
 def test_permission_error_is_visible(client,monkeypatch):
-    monkeypatch.setenv("NETSCOPE_LIVE_CAPTURE","1")
+    monkeypatch.setenv("VIRTUALANCHOO_LIVE_CAPTURE","1")
     monkeypatch.setattr(capture_engine,"interfaces",lambda:[{"name":"test0","addresses":[],"mac":None}])
     def denied(**kwargs):
         raise PermissionError("Operation not permitted")

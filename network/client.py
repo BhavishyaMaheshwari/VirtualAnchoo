@@ -5,7 +5,7 @@ import os
 import socket
 
 MAX_MESSAGE = 256 * 1024
-DEFAULT_SOCKET = "/run/netscope/lab.sock"
+DEFAULT_SOCKET = "/run/virtualanchoo/lab.sock"
 
 class LabUnavailable(RuntimeError):
     pass
@@ -15,7 +15,7 @@ class LabError(RuntimeError):
 
 
 def request(operation: str, payload: dict | None = None, *, socket_path: str | None = None) -> dict:
-    path = socket_path or os.getenv("NETSCOPE_LAB_SOCKET", DEFAULT_SOCKET)
+    path = socket_path or os.getenv("VIRTUALANCHOO_LAB_SOCKET", DEFAULT_SOCKET)
     message = json.dumps({"operation": operation, "payload": payload or {}}).encode() + b"\n"
     if len(message) > MAX_MESSAGE:
         raise LabError("Lab request is too large")

@@ -67,13 +67,13 @@ class CaptureEngine:
 
     def status(self):
         session = self.db.session(self.session_id) if self.session_id else None
-        return {"running":self.running,"importing":self.importing,"session_id":self.session_id,"interface":session["interface"] if session else None,"bpf_filter":session["bpf_filter"] if session else "","packet_count":session["packet_count"] if session else 0,"error":self.error,"live_enabled":os.getenv("NETSCOPE_LIVE_CAPTURE") == "1"}
+        return {"running":self.running,"importing":self.importing,"session_id":self.session_id,"interface":session["interface"] if session else None,"bpf_filter":session["bpf_filter"] if session else "","packet_count":session["packet_count"] if session else 0,"error":self.error,"live_enabled":os.getenv("VIRTUALANCHOO_LIVE_CAPTURE") == "1"}
 
     def start(self, interface, bpf_filter="", packet_limit=10000, authorized=False):
         if not authorized:
             raise CaptureError("Confirm authorization to monitor this interface before capture.")
-        if os.getenv("NETSCOPE_LIVE_CAPTURE") != "1":
-            raise CaptureError("Live capture is disabled. Restart with scripts/start.sh --live or NETSCOPE_LIVE_CAPTURE=1; PCAP import is available without capture privileges.")
+        if os.getenv("VIRTUALANCHOO_LIVE_CAPTURE") != "1":
+            raise CaptureError("Live capture is disabled. Restart with scripts/start.sh --live or VIRTUALANCHOO_LIVE_CAPTURE=1; PCAP import is available without capture privileges.")
         with self.lock:
             if self.running or self.importing:
                 raise CaptureError("A capture or import is already active.")
@@ -106,7 +106,7 @@ class CaptureEngine:
                     raise CaptureError("Capture could not start within 3 seconds.")
                 if getattr(self.sniffer,"exception",None):
                     raise self.sniffer.exception
-                self.monitor = threading.Thread(target=self._monitor, name="netscope-capture-monitor", daemon=True)
+                self.monitor = threading.Thread(target=self._monitor, name="virtualanchoo-capture-monitor", daemon=True)
                 self.monitor.start()
             except Exception as exc:
                 self.error = self._capture_message(exc)
@@ -124,7 +124,7 @@ class CaptureEngine:
         detail = str(exc)
         if isinstance(exc, PermissionError) or "Operation not permitted" in detail or "Permission denied" in detail:
             if sys.platform == "darwin":
-                return "Packet capture permission denied. On macOS, check access to /dev/bpf devices and start NetScope from a normal Terminal, or import a PCAP file. " + detail
+                return "Packet capture permission denied. On macOS, check access to /dev/bpf devices and start VirtualAnchoo from a normal Terminal, or import a PCAP file. " + detail
             return "Packet capture permission denied. Use an authorized Linux environment with CAP_NET_RAW/CAP_NET_ADMIN, or import a PCAP file. " + detail
         if "libpcap" in detail.lower() or "filter" in detail.lower():
             return "Capture filter could not be applied. Check BPF syntax and install libpcap on the capture host. " + detail

@@ -12,7 +12,7 @@ _LOCK = threading.RLock()
 
 @contextmanager
 def connect():
-    path = Path(os.getenv("NETSCOPE_NETWORK_DB", str(Path(__file__).resolve().parents[1] / "data" / "network.sqlite3")))
+    path = Path(os.getenv("VIRTUALANCHOO_NETWORK_DB", str(Path(__file__).resolve().parents[1] / "data" / "network.sqlite3")))
     path.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(path, timeout=10)
     conn.execute("PRAGMA journal_mode=WAL")

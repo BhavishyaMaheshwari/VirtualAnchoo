@@ -1,15 +1,15 @@
-# NetScope
+# VirtualAnchoo
 
 **Network Traffic Analysis, Packet Sniffing and VLAN-Based Network Segmentation**
 
-NetScope is a local Computer Networks project with a Python/FastAPI packet-analysis backend, a React dashboard, and an optional Mininet/Open vSwitch lab. Traffic statistics come from captured packets or explicitly labelled imported capture files. The application starts in offline mode; it does not generate demonstration traffic or create a privileged network automatically.
+VirtualAnchoo is a local Computer Networks project with a Python/FastAPI packet-analysis backend, a React dashboard, and an optional Mininet/Open vSwitch lab. Traffic statistics come from captured packets or explicitly labelled imported capture files. The application starts in offline mode; it does not generate demonstration traffic or create a privileged network automatically.
 
 ## Run locally
 
 Prerequisites: Python 3.11+, Node.js 20.19+ or 22.12+, npm, and a POSIX shell. The VLAN lab additionally requires a compatible Linux host or Ubuntu VM.
 
 ```bash
-cd netscope
+cd VirtualAnchoo
 ./scripts/setup.sh
 ./scripts/start.sh
 ```
@@ -51,7 +51,7 @@ For authorized live capture, start with `./scripts/start.sh --live`, select the 
 | Lab | Mininet, Open vSwitch, Linux namespaces, 802.1Q, routing and firewall tools |
 | Persistence | SQLite for sessions/metadata and lab history; separate PCAP files for export |
 
-TShark is an optional independent capture/dissection aid; NetScope does not require PyShark or a TShark subprocess for its primary parsing path.
+TShark is an optional independent capture/dissection aid; VirtualAnchoo does not require PyShark or a TShark subprocess for its primary parsing path.
 
 ```text
 backend/       FastAPI APIs, capture/parser/analytics services, storage, tests

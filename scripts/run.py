@@ -27,12 +27,12 @@ def process_start(pid: int) -> str | None:
 
 def stop() -> int:
     if not LOCK.exists():
-        print("NetScope is not running through scripts/start.sh.")
+        print("VirtualAnchoo is not running through scripts/start.sh.")
         return 0
     with LOCK.open("r+") as lock:
         try:
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-            print("NetScope is already stopped.")
+            print("VirtualAnchoo is already stopped.")
             return 0
         except BlockingIOError:
             info = json.loads(lock.read())
@@ -43,9 +43,9 @@ def stop() -> int:
         else:
             command = subprocess.check_output(["ps", "-p", str(pid), "-o", "args="], text=True)
             if "scripts/run.py" not in command:
-                raise SystemExit("Process identity does not match NetScope.")
+                raise SystemExit("Process identity does not match VirtualAnchoo.")
         os.kill(pid, signal.SIGTERM)
-        print("Requested NetScope shutdown.")
+        print("Requested VirtualAnchoo shutdown.")
     return 0
 
 
@@ -69,16 +69,16 @@ def main() -> int:
     try:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except BlockingIOError:
-        parser.error("NetScope is already running through scripts/start.sh.")
+        parser.error("VirtualAnchoo is already running through scripts/start.sh.")
     lock.seek(0)
     lock.truncate()
     json.dump({"pid": os.getpid(), "start": process_start(os.getpid())}, lock)
     lock.flush()
     env = os.environ.copy()
-    env["NETSCOPE_LIVE_CAPTURE"] = "1" if args.live else "0"
+    env["VIRTUALANCHOO_LIVE_CAPTURE"] = "1" if args.live else "0"
     origins = [f"http://{host}:{port}" for host in ("localhost", "127.0.0.1") for port in (args.backend_port, args.frontend_port)]
-    env["NETSCOPE_ALLOWED_ORIGINS"] = ",".join(origins + [env.get("NETSCOPE_ALLOWED_ORIGINS", "")])
-    env["NETSCOPE_API_TARGET"] = f"http://127.0.0.1:{args.backend_port}"
+    env["VIRTUALANCHOO_ALLOWED_ORIGINS"] = ",".join(origins + [env.get("VIRTUALANCHOO_ALLOWED_ORIGINS", "")])
+    env["VIRTUALANCHOO_API_TARGET"] = f"http://127.0.0.1:{args.backend_port}"
     children: list[subprocess.Popen] = []
     stopping = False
 
@@ -107,7 +107,7 @@ def main() -> int:
         if not args.production and not args.backend_only and not stopping:
             children.append(subprocess.Popen(["npm", "--prefix", "frontend", "run", "dev", "--", "--host", "127.0.0.1", "--port", str(args.frontend_port), "--strictPort"], cwd=ROOT, env=env, start_new_session=True))
         port = args.backend_port if args.production or args.backend_only else args.frontend_port
-        print(f"NetScope: http://127.0.0.1:{port} | {'live capture enabled' if args.live else 'offline PCAP mode'}", flush=True)
+        print(f"VirtualAnchoo: http://127.0.0.1:{port} | {'live capture enabled' if args.live else 'offline PCAP mode'}", flush=True)
         while not stopping:
             for child in children:
                 if child.poll() is not None:

@@ -19,7 +19,7 @@ The implementation environment has Python 3.12 and Node.js 24. Its process capab
 
 ## Actual results
 
-Latest local verification (2026-11-17, macOS, Python 3.14.0, Node 22.12.0): `./scripts/test.sh` passed **64 Python tests and 8 frontend interaction tests**, with 6 privileged tests skipped; the TypeScript check and Vite production build passed. The added frontend test covers confirmed session deletion. A production preview could not bind to `127.0.0.1:8765` in this sandbox (`operation not permitted`), so visual browser inspection remains unverified here. Live capture and the Linux VLAN lab still require the documented authorized host and privileges.
+Latest local verification (2026-11-20, macOS, Python 3.14.0): `./scripts/test.sh` passed **65 Python tests and 8 frontend interaction tests**, with 6 privileged tests skipped; the TypeScript check and Vite production build passed. The added Python test verifies that existing database files remain accessible after the rename. The frontend interaction suite does not establish visual layout. Live capture and the Linux VLAN lab still require the documented authorized host and privileges.
 
 The following detailed checks were recorded in the original delivery environment; its browser and privileged limits remain separate from the latest local run:
 

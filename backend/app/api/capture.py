@@ -88,4 +88,4 @@ def export_capture(session_id: str, request: Request):
         raise HTTPException(404,"No packet capture file is available for this session.")
     with path.open("rb") as capture_file:
         extension = "pcapng" if capture_file.read(4) == b"\x0a\x0d\x0d\x0a" else "pcap"
-    return FileResponse(path,media_type="application/octet-stream" if extension == "pcapng" else "application/vnd.tcpdump.pcap",filename=f"netscope-{session_id}.{extension}")
+    return FileResponse(path,media_type="application/octet-stream" if extension == "pcapng" else "application/vnd.tcpdump.pcap",filename=f"virtualanchoo-{session_id}.{extension}")

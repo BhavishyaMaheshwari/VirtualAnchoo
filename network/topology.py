@@ -28,7 +28,7 @@ from .client import DEFAULT_SOCKET, MAX_MESSAGE
 from .schema import (DEFAULT_VLANS, HOSTS, TRUNK, ROUTER_INTERFACE, validate_vlans,
                      validate_rules, validate_test, nft_ruleset)
 
-LOG = logging.getLogger("netscope.lab")
+LOG = logging.getLogger("virtualanchoo.lab")
 
 
 def execute(argv: list[str], *, node=None, stdin: str | None = None, timeout: float = 10,
@@ -157,7 +157,7 @@ class Lab:
         ovs_data["data"] = [row for row in ovs_data["data"] if str(row[name_index]).startswith("ns-sw")]
         _, router_addresses = execute(["ip", "-j", "address", "show"], node=self.router)
         _, forwarding = execute(["sysctl", "-n", "net.ipv4.ip_forward"], node=self.router)
-        _, firewall = execute(["nft", "list", "table", "inet", "netscope"], node=self.router)
+        _, firewall = execute(["nft", "list", "table", "inet", "virtualanchoo"], node=self.router)
         return {"running": True, "available": True, "routing_enabled": forwarding.strip() == "1",
                 "vlans": self.vlans, "rules": self.rules, "hosts": HOSTS,
                 "switch": "ns-sw", "trunk": TRUNK, "ovs_ports": ovs_data,
@@ -258,7 +258,7 @@ def main():
     try:
         fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except BlockingIOError:
-        parser.error("Another NetScope lab agent is already running")
+        parser.error("Another VirtualAnchoo lab agent is already running")
     if path.exists():
         if not stat.S_ISSOCK(path.lstat().st_mode):
             parser.error("Refusing to replace a non-socket path")

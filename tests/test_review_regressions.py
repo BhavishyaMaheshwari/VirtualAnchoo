@@ -8,6 +8,7 @@ from fastapi.testclient import TestClient
 from scapy.all import Ether, IP, UDP, PcapNgWriter, PcapReader, wrpcap
 
 from backend.app.main import create_app
+from backend.app.models.database import Database
 
 
 def test_mixed_linktype_pcapng_export_preserves_packets(tmp_path):
@@ -71,3 +72,17 @@ def test_browser_origin_cannot_mutate_local_service(tmp_path):
         denied = client.post("/api/capture/stop", headers={"Origin": "https://untrusted.example"})
         assert denied.status_code == 403
         assert client.post("/api/capture/stop", headers={"Origin": "http://127.0.0.1:8765"}).status_code == 200
+
+
+def test_existing_database_survives_project_rename(tmp_path):
+    database = Database(tmp_path)
+    session = database.create_session("import", "existing capture", "")
+    database.conn.close()
+    (tmp_path / "virtualanchoo.sqlite3").rename(tmp_path / "netscope.sqlite3")
+
+    reopened = Database(tmp_path)
+    try:
+        assert reopened.session(session["id"])["name"] == "existing capture"
+        assert not (tmp_path / "virtualanchoo.sqlite3").exists()
+    finally:
+        reopened.conn.close()

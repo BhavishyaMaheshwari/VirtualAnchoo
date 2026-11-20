@@ -13,5 +13,5 @@ else
   npm --prefix frontend install
 fi
 npm --prefix frontend run build
-echo 'NetScope is ready. Run ./scripts/start.sh for offline PCAP analysis.'
+echo 'VirtualAnchoo is ready. Run ./scripts/start.sh for offline PCAP analysis.'
 echo 'Live capture and the VLAN lab require separate, explicit operator setup; see README.md.'

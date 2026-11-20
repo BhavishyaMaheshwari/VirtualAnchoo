@@ -1,4 +1,4 @@
-"""NetScope local FastAPI service. Run from the repository root."""
+"""VirtualAnchoo local FastAPI service. Run from the repository root."""
 from contextlib import asynccontextmanager
 import asyncio
 import contextlib
@@ -49,7 +49,7 @@ def create_app(data_dir=None,capture_factory=CaptureEngine):
             await asyncio.to_thread(app.state.capture.stop)
             app.state.db.close()
 
-    app = FastAPI(title="NetScope",version="1.0.0",description="Local packet capture, PCAP analysis, and a separately authorized VLAN lab.",lifespan=lifespan)
+    app = FastAPI(title="VirtualAnchoo",version="1.0.0",description="Local packet capture, PCAP analysis, and a separately authorized VLAN lab.",lifespan=lifespan)
     app.add_middleware(TrustedHostMiddleware,allowed_hosts=["localhost","127.0.0.1","[::1]","testserver"])
     app.add_middleware(CORSMiddleware,allow_origins=sorted(ALLOWED_ORIGINS),allow_methods=["GET","POST","DELETE","PATCH"],allow_headers=["Content-Type"])
 
@@ -82,7 +82,7 @@ def create_app(data_dir=None,capture_factory=CaptureEngine):
 
     @app.get("/api/health")
     def health():
-        return {"status":"ok","name":"NetScope","mode":"live-enabled" if app.state.capture.status()["live_enabled"] else "offline","websocket_dropped_events":app.state.hub.dropped_events}
+        return {"status":"ok","name":"VirtualAnchoo","mode":"live-enabled" if app.state.capture.status()["live_enabled"] else "offline","websocket_dropped_events":app.state.hub.dropped_events}
 
     @app.websocket("/ws")
     async def websocket(ws: WebSocket):

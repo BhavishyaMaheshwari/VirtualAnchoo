@@ -18,7 +18,7 @@ sudo systemctl start openvswitch-switch
 sudo /usr/bin/python3 -m network.topology --owner-uid "$(id -u)"
 ```
 
-Keep that terminal open. The lab creates `ns-sw`, six isolated hosts, and `ns-r1`. There is no physical uplink. The controlling Unix socket is `/run/netscope/lab.sock`, restricted to the specified user. In another terminal, as that user:
+Keep that terminal open. The lab creates `ns-sw`, six isolated hosts, and `ns-r1`. There is no physical uplink. The controlling Unix socket is `/run/virtualanchoo/lab.sock`, restricted to the specified user. In another terminal, as that user:
 
 ```bash
 .venv/bin/python -m network.vlan_config
@@ -221,16 +221,16 @@ For interactive rule operations:
 **Configuration:** lab active; capture root-namespace trunk interface `ns-sw-eth7`. Enable routing for the cross-VLAN probe and disable conflicting ACLs.
 
 ```bash
-sudo tcpdump -i ns-sw-eth7 -nn -s 0 -w /tmp/netscope-trunk.pcap 'vlan'
+sudo tcpdump -i ns-sw-eth7 -nn -s 0 -w /tmp/virtualanchoo-trunk.pcap 'vlan'
 ```
 
-In another terminal, trigger the real eng1→adm1 connectivity request from experiment 7. Stop tcpdump with Ctrl+C, then import `/tmp/netscope-trunk.pcap` into NetScope. Alternatively use NetScope live capture with the same interface/filter and appropriate privileges.
+In another terminal, trigger the real eng1→adm1 connectivity request from experiment 7. Stop tcpdump with Ctrl+C, then import `/tmp/virtualanchoo-trunk.pcap` into VirtualAnchoo. Alternatively use VirtualAnchoo live capture with the same interface/filter and appropriate privileges.
 
 **Expected:** trunk frames include 802.1Q; Engineering traffic uses VLAN 10 and Administration uses VLAN 30. The inspector exposes tags, PCP, DEI, and EtherType. Do not infer tags from the topology diagram. Physical NIC offloads and capture position can affect whether tags are visible; virtual trunk observation must still be verified.
 
 **Actual result:** NOT RUN here. Constructed parser fixtures verify extraction only.
 
-**Packet observations:** record selected tagged packet IDs/fields and compare Wireshark or `tcpdump -nn -e -r /tmp/netscope-trunk.pcap`.
+**Packet observations:** record selected tagged packet IDs/fields and compare Wireshark or `tcpdump -nn -e -r /tmp/virtualanchoo-trunk.pcap`.
 
 ## Automated privileged checks and cleanup
 
@@ -243,13 +243,13 @@ Application parser/API tests run without special privileges:
 Authorized live loopback integration (run in the configured capture-capable service/interpreter environment):
 
 ```bash
-NETSCOPE_RUN_LIVE_TESTS=1 .venv/bin/python -m pytest backend/tests/test_live_capture.py -v -ra
+VIRTUALANCHOO_RUN_LIVE_TESTS=1 .venv/bin/python -m pytest backend/tests/test_live_capture.py -v -ra
 ```
 
 To let pytest create and destroy its own lab, first stop any manually started lab. Use a virtual environment made with `--system-site-packages` so Ubuntu's Mininet package is visible, or install Mininet for the chosen interpreter:
 
 ```bash
-sudo env NETSCOPE_RUN_NETWORK_TESTS=1 .venv/bin/python -m pytest network/tests/test_privileged.py -v -ra
+sudo env VIRTUALANCHOO_RUN_NETWORK_TESTS=1 .venv/bin/python -m pytest network/tests/test_privileged.py -v -ra
 ```
 
 Stop the manually started lab gracefully using Ctrl+C in its terminal or:

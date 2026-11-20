@@ -33,12 +33,12 @@ import { Panel, Empty } from "./Charts";
 import { time } from "../utils/format";
 const vlanColor = (id: number | undefined) =>
   id === 10
-    ? "#a5efb5"
+    ? "#608f35"
     : id === 20
-      ? "#b2a3fa"
+      ? "#8271b2"
       : id === 30
-        ? "#f4c57c"
-        : "#8ba8ff";
+        ? "#bc8b3d"
+        : "#6489bc";
 function NetworkNode({
   data,
 }: NodeProps<
@@ -92,12 +92,12 @@ export function TopologyPage({ data, run, busy }: Props) {
       (topology?.edges || []).map((e) => ({
         ...e,
         type: "smoothstep",
-        style: { stroke: "#4d6178", strokeWidth: 1.5 },
-        labelStyle: { fill: "#a0adbc", fontSize: 10 },
-        labelBgStyle: { fill: "#151c26" },
+        style: { stroke: "#a8bca0", strokeWidth: 1.5 },
+        labelStyle: { fill: "#546b58", fontSize: 11 },
+        labelBgStyle: { fill: "#ffffff" },
         markerEnd: {
           type: MarkerType.ArrowClosed,
-          color: "#4d6178",
+          color: "#a8bca0",
           width: 10,
           height: 10,
         },
@@ -137,15 +137,15 @@ export function TopologyPage({ data, run, busy }: Props) {
               nodesConnectable={false}
               elementsSelectable
               onNodeClick={(_, node) => setSelected(node.data)}
-              colorMode="dark"
+              colorMode="light"
               minZoom={0.25}
               maxZoom={1.8}
             >
-              <Background color="#344051" gap={24} size={1} />
+              <Background color="#dce9d5" gap={24} size={1} />
               <Controls showInteractive={false} />
               <MiniMap
                 nodeColor={(n) => vlanColor(n.data.vlan_id as number)}
-                maskColor="#0c111990"
+                maskColor="#f8faf5aa"
               />
             </ReactFlow>
           ) : (

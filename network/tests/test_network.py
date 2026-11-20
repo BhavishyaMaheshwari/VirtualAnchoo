@@ -9,7 +9,7 @@ from network.topology import Lab
 
 @pytest.fixture
 def api(tmp_path, monkeypatch):
-    monkeypatch.setenv('NETSCOPE_NETWORK_DB', str(tmp_path/'network.sqlite3'))
+    monkeypatch.setenv('VIRTUALANCHOO_NETWORK_DB', str(tmp_path/'network.sqlite3'))
     def offline(*args, **kwargs):
         raise client.LabUnavailable('Test lab offline')
     monkeypatch.setattr(client, 'request', offline)
@@ -50,7 +50,7 @@ def test_acl_compilation_and_precedence():
     allow=validate_rule({'id':'allow','source_vlan':10,'destination_vlan':30,'action':'allow'})
     deny=validate_rule({'id':'deny','source_vlan':10,'destination_vlan':30,'protocol':'icmp','action':'deny'})
     rules=nft_ruleset(DEFAULT_VLANS,[allow,deny],existing=True)
-    assert rules.startswith('delete table inet netscope\n')
+    assert rules.startswith('delete table inet virtualanchoo\n')
     assert 'policy drop' in rules
     assert rules.index('ip protocol icmp counter drop') < rules.index('ip daddr 192.168.30.0/24 counter accept')
     assert 'ct state established,related accept' in rules

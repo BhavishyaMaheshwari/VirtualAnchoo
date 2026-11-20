@@ -15,7 +15,7 @@ EXCLUDE = {'.git','.venv','.venv-lab','node_modules','data','.run','__pycache__'
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--output',type=Path,default=ROOT.parent/'NetScope.zip')
+    parser.add_argument('--output',type=Path,default=ROOT.parent/'VirtualAnchoo.zip')
     args=parser.parse_args()
     output=args.output.resolve()
     if not (ROOT/'frontend/dist/index.html').exists():
@@ -24,13 +24,13 @@ def main():
     for path in sorted(ROOT.rglob('*')):
         rel=path.relative_to(ROOT)
         if set(rel.parts)&EXCLUDE or path.is_symlink() or not path.is_file(): continue
-        if path.resolve()==output or path.suffix in {'.zip','.pyc','.tsbuildinfo','.sqlite3','.pcap','.pcapng'}: continue
+        if rel.as_posix() == 'MANIFEST.sha256' or path.resolve()==output or path.suffix in {'.zip','.pyc','.tsbuildinfo','.sqlite3','.pcap','.pcapng'}: continue
         if path.name=='.env' or path.name.startswith('.env.'): continue
         files.append((path,rel))
     output.parent.mkdir(parents=True,exist_ok=True)
     manifest=[]
     def add(archive, name, data, executable=False):
-        info=ZipInfo('netscope/'+name,date_time=(2026,1,1,0,0,0))
+        info=ZipInfo('VirtualAnchoo/'+name,date_time=(2026,1,1,0,0,0))
         info.compress_type=ZIP_DEFLATED
         info.external_attr=(0o100755 if executable else 0o100644)<<16
         archive.writestr(info,data)
